@@ -465,7 +465,7 @@ function renderAgentApp() {
               <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2.5 px-2.5">Management</div>
               <nav class="space-y-1">
                 <button onclick="navigate('/admin')" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                  ⚙️ SLA & Automations
+                  ⚙️ Admin Console
                 </button>
                 <button onclick="navigate('/kb')" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition">
                   📚 Knowledge Base
@@ -557,8 +557,8 @@ function renderAgentApp() {
         ${!selected ? `
           <div class="flex-1 flex flex-col items-center justify-center text-slate-500 text-xs p-8">
             <div class="text-4xl mb-3">📬</div>
-            <p class="font-extrabold text-base text-slate-300">Select a ticket from the queue</p>
-            <p class="text-slate-500 text-xs mt-1">View timeline, SLA status, and write customer responses.</p>
+            <h2 class="text-base font-bold text-slate-300">Select a ticket from the queue</h2>
+            <p class="text-slate-500 text-xs mt-1">View timeline, update status, and write customer responses.</p>
           </div>
         ` : `
           <!-- Detail Header -->
@@ -991,7 +991,7 @@ function renderKnowledgeBase() {
         <div class="max-w-xl mx-auto relative">
           <input 
             type="text" 
-            placeholder="Search articles (e.g. SLA, PostgreSQL, Email)..."
+            placeholder="Search articles (e.g. Deployment, PostgreSQL, Email)..."
             class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-xl"
           />
         </div>
