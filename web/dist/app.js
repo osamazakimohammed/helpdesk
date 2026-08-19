@@ -527,17 +527,17 @@ function renderAgentApp() {
           ` : state.tickets.map(t => `
             <div 
               onclick="selectTicket('${t.id}')"
-              class="p-4 cursor-pointer transition relative ${selected && selected.id === t.id ? 'bg-indigo-950/40 border-l-4 border-indigo-500' : 'hover:bg-slate-800/40'} ${t.first_response_breached || t.resolution_breached ? 'sla-breached' : 'sla-healthy'}"
+              class="p-4 cursor-pointer transition relative ${selected && selected.id === t.id ? 'bg-indigo-950/40 border-l-4 border-indigo-500' : 'hover:bg-slate-800/40'}"
             >
               <div class="flex items-center justify-between gap-2 mb-1.5">
                 <div class="flex items-center gap-2">
                   ${getPriorityDot(t.priority_key)}
                   <span class="font-mono text-xs font-extrabold text-slate-300">${t.reference_no}</span>
                 </div>
-                ${formatSLABadge(t.first_response_due_at, t.first_response_breached)}
+                <span class="text-[10px] text-slate-500 font-mono">${formatRelativeTime(t.updated_at)}</span>
               </div>
-              <h3 class="font-bold text-xs text-slate-100 line-clamp-1 mb-1">${t.subject}</h3>
-              <p class="text-[11px] text-slate-400 line-clamp-2 mb-2.5 leading-relaxed">${t.description_text || ''}</p>
+              <h3 dir="auto" class="font-bold text-xs text-slate-100 line-clamp-1 mb-1">${t.subject}</h3>
+              <p dir="auto" class="text-[11px] text-slate-400 line-clamp-2 mb-2.5 leading-relaxed">${t.description_text || ''}</p>
               <div class="flex items-center justify-between text-[10px] text-slate-400">
                 <div class="flex items-center gap-1.5 font-semibold">
                   <div class="w-4 h-4 rounded-full bg-slate-700 flex items-center justify-center font-bold text-[9px] text-slate-200">
@@ -545,10 +545,7 @@ function renderAgentApp() {
                   </div>
                   <span>${t.contact_name || t.contact_email}</span>
                 </div>
-                <div class="flex items-center gap-2">
-                  ${getStatusBadge(t.status_key, t.status_label)}
-                  <span class="text-slate-500 font-mono">${formatRelativeTime(t.updated_at)}</span>
-                </div>
+                ${getStatusBadge(t.status_key, t.status_label)}
               </div>
             </div>
           `).join('')}
