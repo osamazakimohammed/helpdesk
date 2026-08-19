@@ -14,8 +14,7 @@ node_modules/
 # Distribution / packaging
 .Python
 build/
-develop-eggs/
-dist/
+!web/dist/
 downloads/
 eggs/
 .eggs/
