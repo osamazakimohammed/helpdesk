@@ -22,10 +22,9 @@ A high-performance, self-hostable, full-stack customer support and ticketing pla
 | Surface | URL Path | Description | Access / Role |
 |---|---|---|---|
 | **Agent Workspace** | `/app` | Real-time ticket queues, status transitions, conversation stream, internal private notes, customer replies, and team assignment. | `admin`, `agent` |
-| **Customer Portal** | `/portal` | Client self-service portal, request tracking, multi-language threaded conversations, and direct replies. | `contact` (Customer) |
-| **Admin Console** | `/admin` | Team members, agent capacity management, and immutable system audit trail. | `admin`, `manager` |
-| **Knowledge Base** | `/kb` | Fast self-service help center, space and category browsing, full-text search, and article views. | Public / Guest |
-| **Request Intake Form** | `/submit` | Streamlined intake form with automatic authentication detection and custom field support. | Public / Authenticated |
+| **Customer Portal** | `/portal` | Client self-service portal, request tracking, multi-language threaded conversations, and direct replies. | `admin`, `contact` (Customer) |
+| **Request Intake Form** | `/submit` | Streamlined intake form with automatic authentication detection and custom field support. | `admin`, `contact`, Public |
+| **Knowledge Base** | `/kb` | Fast self-service help center, space and category browsing, full-text search, and article views. | All Roles / Public |
 | **Interactive API Docs** | `/api/docs` | OpenAPI 3.1 documentation with interactive Swagger UI. | Public |
 
 ---
@@ -69,8 +68,8 @@ The system supports logging in using **either a plain username or full email add
 
 | Role | Username / Email | Password | Default Destination | Accessible Surfaces |
 |---|---|---|---|---|
-| **Administrator** | `admin` *or* `admin@helpdesk.local` | `admin` | `/app` | Agent Workspace, Admin Console, Knowledge Base, API Docs |
-| **Support Agent** | `support` *or* `support@helpdesk.local` | `support` | `/app` | Agent Workspace, Knowledge Base |
+| **Administrator** | `admin` *or* `admin@helpdesk.local` | `admin` | `/app` | **Full Platform Access**: Agent Workspace, Customer Portal, Submit Request, Knowledge Base, API Docs |
+| **Support Agent** | `support` *or* `support@helpdesk.local` | `support` | `/app` | Agent Workspace, Help Center |
 | **Customer User** | `customer` *or* `customer@helpdesk.local` | `customer` | `/portal` | Customer Portal, Submit Request, Knowledge Base |
 
 ---

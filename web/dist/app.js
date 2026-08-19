@@ -19,10 +19,6 @@ const state = {
   selectedPortalTicket: null,
   portalReplyText: '',
 
-  // Admin Console State
-  adminTab: 'agents',
-  adminData: { agents: [], audit: [] },
-
   // Knowledge Base State
   kbSpaces: [],
   selectedSpace: null,
@@ -104,7 +100,8 @@ function renderNavbar() {
   if (role === 'admin' || role === 'manager') {
     navLinks = `
       <a href="/app" onclick="event.preventDefault(); navigate('/app')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${path.startsWith('/app') ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'}">Agent Workspace</a>
-      <a href="/admin" onclick="event.preventDefault(); navigate('/admin')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${path.startsWith('/admin') ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'}">Admin Console</a>
+      <a href="/portal" onclick="event.preventDefault(); navigate('/portal')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${path.startsWith('/portal') ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'}">Customer Portal</a>
+      <a href="/submit" onclick="event.preventDefault(); navigate('/submit')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${path.startsWith('/submit') ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'}">Submit Request</a>
       <a href="/kb" onclick="event.preventDefault(); navigate('/kb')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${path.startsWith('/kb') ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'}">Help Center</a>
       <a href="/api/docs" target="_blank" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-1.5">OpenAPI ↗</a>
     `;
@@ -460,28 +457,14 @@ function renderAgentApp() {
             </nav>
           </div>
 
-          ${state.user.role === 'admin' ? `
-            <div>
-              <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2.5 px-2.5">Management</div>
-              <nav class="space-y-1">
-                <button onclick="navigate('/admin')" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                  ⚙️ Admin Console
-                </button>
-                <button onclick="navigate('/kb')" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                  📚 Knowledge Base
-                </button>
-              </nav>
-            </div>
-          ` : `
-            <div>
-              <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2.5 px-2.5">Resources</div>
-              <nav class="space-y-1">
-                <button onclick="navigate('/kb')" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                  📚 Help Center Guides
-                </button>
-              </nav>
-            </div>
-          `}
+          <div>
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2.5 px-2.5">Resources</div>
+            <nav class="space-y-1">
+              <button onclick="navigate('/kb')" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                📚 Help Center Guides
+              </button>
+            </nav>
+          </div>
         </div>
 
         <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/70 text-xs">
@@ -891,88 +874,7 @@ function renderCustomerPortal() {
   `;
 }
 
-// ----------------- Surface 3: Admin Console (/admin) -----------------
-async function loadAdminData() {
-  if (!state.token || !state.user || (state.user.role !== 'admin' && state.user.role !== 'manager')) {
-    return;
-  }
-  try {
-    const [agentsData, auditData] = await Promise.all([
-      api('/admin/agents'),
-      api('/admin/audit-logs'),
-    ]);
-    state.adminData = {
-      agents: agentsData || [],
-      audit: auditData || [],
-    };
-    render();
-  } catch (err) {
-    console.error('Failed to load admin data:', err);
-  }
-}
-
-function renderAdminConsole() {
-  if (!state.user || (state.user.role !== 'admin' && state.user.role !== 'manager')) {
-    return `
-      <div class="flex-1 flex flex-col items-center justify-center p-8 text-center text-xs">
-        <div class="text-4xl mb-3">🔒</div>
-        <h1 class="text-lg font-black text-white">Access Restricted</h1>
-        <p class="text-slate-400 mt-1">You do not have permission to view the Admin Console.</p>
-        <button onclick="navigate(getDefaultRoute())" class="mt-4 bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-xl transition">
-          Return to Dashboard
-        </button>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="max-w-6xl mx-auto p-8 w-full space-y-8 flex-1">
-      <div class="border-b border-slate-800 pb-4">
-        <h1 class="text-2xl font-black text-white">System Admin & Controls</h1>
-        <p class="text-xs text-slate-400 mt-1">Configure automated assignment rules, team members, and audit trails.</p>
-      </div>
-
-      <div class="flex items-center gap-2 border-b border-slate-800">
-        <button onclick="setAdminTab('agents')" class="px-4 py-2.5 text-xs font-bold border-b-2 transition ${state.adminTab === 'agents' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'}">Agents & Teams</button>
-        <button onclick="setAdminTab('audit')" class="px-4 py-2.5 text-xs font-bold border-b-2 transition ${state.adminTab === 'audit' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'}">Append-Only Audit Log</button>
-      </div>
-
-      ${state.adminTab === 'audit' ? `
-        <div class="space-y-4">
-          <h2 class="font-bold text-sm text-slate-200">System Audit Trail (BRIN Index on at)</h2>
-          <div class="bg-slate-900 rounded-2xl border border-slate-800 divide-y divide-slate-800 font-mono text-xs">
-            ${(state.adminData.audit || []).map(a => `
-              <div class="p-3.5 flex items-center justify-between">
-                <div>
-                  <span class="text-indigo-400 font-bold">${a.action}</span>
-                  <span class="text-slate-400 ml-2">on ${a.entity} (${a.entity_id})</span>
-                </div>
-                <span class="text-slate-500 text-[11px]">${new Date(a.at).toISOString()}</span>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      ` : `
-        <div class="space-y-4">
-          <h2 class="font-bold text-sm text-slate-200">Support Agents & Team Capacity</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            ${(state.adminData.agents || []).map(ag => `
-              <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-between text-xs">
-                <div>
-                  <div class="font-bold text-white">${ag.full_name}</div>
-                  <div class="text-[11px] text-slate-400">${ag.email}</div>
-                </div>
-                <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-300 font-mono text-[10px] border border-emerald-500/20">Max Open: ${ag.max_open_capacity || 20}</span>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `}
-    </div>
-  `;
-}
-
-// ----------------- Surface 4: Public Knowledge Base (/kb) -----------------
+// ----------------- Surface 3: Public Knowledge Base (/kb) -----------------
 async function loadKBData() {
   try {
     const spaces = await api('/kb/spaces');
@@ -1128,8 +1030,6 @@ function render() {
     bodyHTML = renderAuthGateway();
   } else if (path.startsWith('/portal')) {
     bodyHTML = renderCustomerPortal();
-  } else if (path.startsWith('/admin')) {
-    bodyHTML = renderAdminConsole();
   } else if (path.startsWith('/kb')) {
     bodyHTML = renderKnowledgeBase();
   } else if (path.startsWith('/submit')) {
@@ -1157,7 +1057,6 @@ window.addEventListener('DOMContentLoaded', () => {
   render();
   const path = window.location.pathname;
   if (path.startsWith('/portal')) loadPortalData();
-  else if (path.startsWith('/admin')) loadAdminData();
   else if (path.startsWith('/kb')) loadKBData();
   else if (path.startsWith('/app') || path === '/') {
     if (state.token && state.user && (state.user.role === 'admin' || state.user.role === 'agent')) {
@@ -1174,7 +1073,6 @@ window.setFilter = setFilter;
 window.handleSearchInput = handleSearchInput;
 window.handleUpdateTicketField = handleUpdateTicketField;
 window.setComposerMode = setComposerMode;
-window.setAdminTab = setAdminTab;
 window.setAuthMode = setAuthMode;
 window.handleSendReply = handleSendReply;
 window.handleCustomerReply = handleCustomerReply;
